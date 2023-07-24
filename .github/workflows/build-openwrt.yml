@@ -70,6 +70,7 @@ jobs:
       run: |
         df -hT $PWD
         git clone -b mt7622 --single-branch https://github.com/padavanonly/immortalwrtARM openwrt
+        curl https://raw.githubusercontent.com/zhhding0/AX6S-OpenWrt/master/ax6s -o openwrt/.config
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Load custom feeds
@@ -93,9 +94,9 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
-    - name: SSH connection to Actions
-      uses: mxschmitt/action-tmate@v3
-      if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
+    #- name: SSH connection to Actions
+    #  uses: mxschmitt/action-tmate@v3
+    #  if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
 
     - name: Download package
       id: package
