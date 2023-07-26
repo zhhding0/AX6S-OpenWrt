@@ -24,13 +24,14 @@ on:
 
 
 env:
-  REPO_URL: https://github.com/padavanonly/immortalwrtARM
+  # REPO_URL: https://github.com/padavanonly/immortalwrtARM
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
-  SSH_ACTIONS: false
+  SSH_ACTIONS: true
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
@@ -69,8 +70,7 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        git clone -b mt7622 --single-branch https://github.com/padavanonly/immortalwrtARM openwrt
-        curl https://raw.githubusercontent.com/zhhding0/AX6S-OpenWrt/master/ax6s -o openwrt/.config
+        git clone $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Load custom feeds
@@ -94,9 +94,9 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_P2_SH
 
-    #- name: SSH connection to Actions
-    #  uses: mxschmitt/action-tmate@v3
-    #  if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
+    - name: SSH connection to Actions
+      uses: mxschmitt/action-tmate@v3
+      if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
 
     - name: Download package
       id: package
