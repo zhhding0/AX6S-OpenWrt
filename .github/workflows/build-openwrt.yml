@@ -51,6 +51,12 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
+        df -hT
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+        sudo rm -rf "/usr/local/share/boost"
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+        sudo apt purge firebox* php* chrome* || true
         sudo apt update -y
         sudo apt full-upgrade -y
         sudo apt install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
@@ -69,9 +75,9 @@ jobs:
     - name: Clone source code
       working-directory: /workdir
       run: |
-        df -hT $PWD
         git clone $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        df -hT $PWD
 
     - name: Load custom feeds
       run: |
@@ -85,6 +91,7 @@ jobs:
 
     - name: Install feeds
       run: cd openwrt && ./scripts/feeds install -a
+        
 
     - name: Load custom configuration
       run: |
@@ -110,6 +117,7 @@ jobs:
     - name: Compile the firmware
       id: compile
       run: |
+        df -hT
         cd openwrt
         echo -e "$(nproc) thread compile"
         make -j$(nproc) || make -j1 || make -j1 V=s
