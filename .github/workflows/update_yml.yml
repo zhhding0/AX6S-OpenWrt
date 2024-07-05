@@ -8,14 +8,7 @@ on:
       - main
     paths-ignore:
       - "README.md"
-      - ".github/workflows/delete-old-workflows.yml"
-      - ".github/workflows/update-adguardhome-prerelease.yml"
-      - ".github/workflows/update-adguardhome-release.yml"
-      - ".github/workflows/update-clashdashboard.yml"
-      - ".github/workflows/update-mihomo-alpha.yml"
-      - ".github/workflows/update-mihomo-meta.yml"
-      - ".github/workflows/update-singbox-prerelease.yml"
-      - ".github/workflows/update-singbox-release.yml"
+      - ".github/workflows"
 
 jobs:
   go:
@@ -68,42 +61,9 @@ jobs:
             goos: linux
             goarch: amd64
             goamd64: v3
-          - name: linux-armv5
-            goos: linux
-            goarch: arm
-            goarm: 5
-          - name: linux-armv6
-            goos: linux
-            goarch: arm
-            goarm: 6
-          - name: linux-armv7
-            goos: linux
-            goarch: arm
-            goarm: 7
           - name: linux-arm64
             goos: linux
             goarch: arm64
-          - name: linux-mips-softfloat
-            goos: linux
-            goarch: mips
-            gomips: softfloat
-          - name: linux-mipsle-softfloat
-            goos: linux
-            goarch: mipsle
-            gomips: softfloat
-          - name: linux-mipsle-hardfloat
-            goos: linux
-            goarch: mipsle
-            gomips: hardfloat
-          # windows
-          - name: windows-amd64
-            goos: windows
-            goarch: amd64
-            goamd64: v1
-          - name: windows-amd64-v3
-            goos: windows
-            goarch: amd64
-            goamd64: v3
 
       fail-fast: false
     runs-on: ubuntu-latest
@@ -169,8 +129,8 @@ jobs:
 
       - name: Zip core by `tar`
         run: |
-          archs=(amd64 amd64-v3 armv5 armv6 armv7 arm64 mips-softfloat mipsle-hardfloat mipsle-softfloat)
-          new_name=(amd64 amd64v3 armv5 armv6 armv7 armv8 mips-softfloat mipsle-hardfloat mipsle-softfloat)
+          archs=(amd64 amd64-v3 arm64)
+          new_name=(amd64 amd64v3 armv8)
           for((i=0;i<9;i++));do
             mv -f ./tmp/linux-${archs[i]}/sing-box ./tmp/CrashCore
             chmod +x ./tmp/CrashCore
@@ -182,14 +142,12 @@ jobs:
           mkdir -p ./sing-box-puernya/
           rm -rf ./sing-box-puernya/*
           mv -f ./tmp/sing-box-linux* ./sing-box-puernya/
-          mv -f ./tmp/windows-amd64/sing-box.exe ./sing-box-puernya/sing-box-windows-amd64.exe
-          mv -f ./tmp/windows-amd64-v3/sing-box.exe ./sing-box-puernya/sing-box-windows-amd64v3.exe
           rm -rf ./tmp* 
 
-      - name: Commit and push `sing-box`
-        run: |
-          cd ./sing-box-puernya/ || exit 1
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add . && git commit -m "更新 sing-box 内核 PuerNya 版至 v${VERSION}" || exit 0
-          git push -f
+      # - name: Commit and push `sing-box`
+      #   run: |
+      #     cd ./sing-box-puernya/ || exit 1
+      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      #     git config --global user.name "github-actions[bot]"
+      #     git add . && git commit -m "更新 sing-box 内核 PuerNya 版至 v${VERSION}" || exit 0
+      #     git push -f
