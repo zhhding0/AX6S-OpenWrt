@@ -9,7 +9,8 @@
 name: Build OpenWrt
 
 on:
-  push:
+  pull_request:
+  #push:
     branches: 
       - master
   # schedule:
@@ -17,7 +18,8 @@ on:
   release:
     types: [published]
 #  schedule:
-#    - cron: 0 8 * * 5
+
+
   watch:
  #   types: started
 
