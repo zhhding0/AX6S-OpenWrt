@@ -2,7 +2,7 @@ name: Update sing-box PuerNya
 on:
   workflow_dispatch:
   schedule:
-    - cron: "37 14 * * *"
+    - cron: "38 14 * * *"
   push:
     branches:
       - main
