@@ -47,6 +47,7 @@ jobs:
           version=$(CGO_ENABLED=0 go run ./cmd/internal/read_tag)
           echo version=$version >> $GITHUB_OUTPUT
           echo tags=with_quic,with_shadowsocksr,with_ech,with_utls,with_clash_api >> $GITHUB_OUTPUT
+          echo version=$version >> sing-box.version.txt
 
   cross:
     strategy:
