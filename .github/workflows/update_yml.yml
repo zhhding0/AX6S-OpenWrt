@@ -103,7 +103,8 @@ jobs:
 
       - name: Build core
         id: build
-        run: go build -v -trimpath -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -tags "${TAGS}" ./cmd/sing-box
+        # run: go build -v -trimpath -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=${VERSION}' -s -w -buildid=" -tags "${TAGS}" ./cmd/sing-box
+        run: go build -v -trimpath -ldflags "-X 'github.com/sagernet/sing-box/constant.Version=1.9.5' -s -w -buildid=" -tags "${TAGS}" ./cmd/sing-box
 
       - name: Upload files to workspace
         uses: actions/upload-artifact@v4
