@@ -136,15 +136,15 @@ jobs:
           for((i=0;i<9;i++));do
             mv -f ./tmp/linux-${archs[i]}/sing-box ./tmp/CrashCore
             chmod +x ./tmp/CrashCore
-            tar --no-same-owner -czf ./tmp/sing-box-linux-${new_name[i]}.tar.gz -C ./tmp/ ./CrashCore
+            tar --no-same-owner -czf ./tmp/sing-box-linux-${new_name[i]}-${VERSION}.tar.gz -C ./tmp/ ./CrashCore
           done
 
-      - name: Move files
-        run: |
-          mkdir -p ./sing-box-puernya/
-          rm -rf ./sing-box-puernya/*
-          mv -f ./tmp/sing-box-linux* ./sing-box-puernya/
-          rm -rf ./tmp* 
+      # - name: Move files
+      #   run: |
+      #     mkdir -p ./sing-box-puernya/
+      #     rm -rf ./sing-box-puernya/*
+      #     mv -f ./tmp/sing-box-linux* ./sing-box-puernya/
+      #     rm -rf ./tmp* 
 
       # - name: Commit and push `sing-box`
       #   run: |
