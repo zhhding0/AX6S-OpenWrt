@@ -1,4 +1,4 @@
-name: build-linux-arm64
+name: build-corplink-rs-linux-arm64
 
 on:
   workflow_dispatch:
@@ -8,31 +8,37 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout corplink-rs
+        uses: actions/checkout@v4
         with:
+          repository: PinkD/corplink-rs
+          ref: master
           submodules: recursive
+          path: corplink-rs
 
       - name: Install deps
         run: |
           sudo apt-get update
           sudo apt-get install -y clang libclang-dev gcc-aarch64-linux-gnu make pkg-config
 
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-unknown-linux-gnu
 
-      - uses: actions/setup-go@v5
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
           go-version: '1.22'
 
       - name: Build libwg
+        working-directory: corplink-rs/libwg
         run: |
-          git submodule update --init --recursive
-          cd libwg
-          GOOS=linux GOARCH=arm64 CGO_ENABLED=1 CC=aarch64-linux-gnu-gcc make libwg
+          GOOS=linux GOARCH=arm64 CGO_ENABLED=1 CC=aarch64-linux-gnu-gcc ./build.sh
           ls -la
 
-      - name: Build rust binary
+      - name: Build corplink-rs
+        working-directory: corplink-rs
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
           CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
@@ -43,10 +49,11 @@ jobs:
       - name: Package
         run: |
           mkdir -p dist
-          cp target/aarch64-unknown-linux-gnu/release/corplink-rs dist/
+          cp corplink-rs/target/aarch64-unknown-linux-gnu/release/corplink-rs dist/
           tar -czf corplink-rs-linux-arm64.tar.gz -C dist corplink-rs
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: corplink-rs-linux-arm64
           path: corplink-rs-linux-arm64.tar.gz
